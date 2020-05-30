@@ -40,25 +40,33 @@ async def on_reaction_add(reaction, user):
                     await message.channel.send('https://giphy.com/gifs/LJemLPJs6dBhm')
 
 @client.command()
-async def bin(ctx, member:discord.Member):
+async def bin(ctx, member:discord.Member, *, reason:str = ''):
+    if ctx.channel.name != bin_votes_channel:
+        return
     guild = ctx.message.guild
+    reasonMessage = f' for reason: `{reason}`' if reason != '' else ''
     if await isBinned(guild, member) == True:
         await ctx.send(f'{member.mention} is already in the bin!')
     else:
-        message = await ctx.send(f'{member.mention} is being voted into the bin by {ctx.message.author.mention}. React with a {reactionStr} to vote for binning. {numVotes} {reactionStr}\'s are needed.')
+        message = await ctx.send(f'{member.mention} is being voted into the bin by {ctx.message.author.mention}{reasonMessage}.\nReact with a {reactionStr} to vote for binning. {numVotes} {reactionStr}\'s are needed.')
         binMessages.append(message.id)
 
 @client.command()
-async def unbin(ctx, member:discord.Member):
+async def unbin(ctx, member:discord.Member, *, reason:str = ''):
+    if ctx.channel.name != bin_votes_channel:
+        return
     guild = ctx.message.guild
+    reasonMessage = f' for reason: `{reason}`' if reason != '' else ''
     if await isBinned(guild, member) == False:
         await ctx.send(f'{member.mention} is already out of the bin!')
     else:
-        message = await ctx.send(f'{member.mention} is being voted out of the bin by {ctx.message.author.mention}. React with a {reactionStr} to vote for unbinning. {numVotes} {reactionStr}\'s are needed.')
+        message = await ctx.send(f'{member.mention} is being voted out of the bin by {ctx.message.author.mention}{reasonMessage}. React with a {reactionStr} to vote for unbinning. {numVotes} {reactionStr}\'s are needed.')
         binMessages.append(message.id)
 
 @client.command()
 async def votenum(ctx, number:int):
+    if ctx.channel.name != bin_votes_channel:
+        return
     if number > 0:
         global numVotes
         numVotes = number
