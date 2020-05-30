@@ -64,18 +64,19 @@ async def unbin(ctx, member:discord.Member, *, reason:str = ''):
         message = await ctx.send(f'{member.mention} is being voted out of the bin by {ctx.message.author.mention}{reasonMessage}. React with a {reactionStr} to vote for unbinning. {numVotes} {reactionStr}\'s are needed.')
         binMessages.append(message.id)
 
-'''
+
 @client.command()
 async def votenum(ctx, number:int):
     if ctx.channel.name != bin_votes_channel:
         return
-    if number > 0:
-        global numVotes
-        numVotes = number
-        await ctx.send(':thumbsup:')
-    else:
-        await ctx.send('The vote number must be a positive integer!')
-'''
+    if ctx.message.author.display_name == 'Koalacards' or ctx.message.author.display_name == 'Lili':
+        if number > 0:
+            global numVotes
+            numVotes = number
+            await ctx.send(':thumbsup:')
+        else:
+            await ctx.send('The vote number must be a positive integer!')
+
         
 async def binUnbin(guild, member:discord.Member):
     binnedRole = await getBinnedRole(guild)
