@@ -42,6 +42,8 @@ async def bin(ctx, member:discord.Member, *, reason:str = ''):
     if ctx.channel.name != bin_votes_channel:
         return
     guild = ctx.message.guild
+    if member == client.user:
+        await ctx.send(f'Silly {ctx.message.author}, you can\'t bin me!')
     reasonMessage = f' for reason: `{reason}`' if reason != '' else ''
     if await isBinned(guild, member) == True:
         await ctx.send(f'{member.mention} is already in the bin!')
