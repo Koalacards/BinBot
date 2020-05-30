@@ -21,15 +21,11 @@ async def on_ready():
 
 @client.event
 async def on_reaction_add(reaction, user):
-    numThumbsUp = 0
     message = reaction.message
     guild = message.guild
     if message.id in binMessages:
-        for reaction in message.reactions:
-            if str(reaction) == reactionStr:
-                numThumbsUp = numThumbsUp + 1
-        print(numThumbsUp)
-        if numThumbsUp >= numVotes:
+        if reaction.count >= numVotes:
+            print('time to assign the binned role')
             toBeBinned = message.mentions[0]
             binned = await binUnbin(guild, toBeBinned)
             print('got past role assign')
