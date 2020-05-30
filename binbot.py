@@ -28,9 +28,11 @@ async def on_reaction_add(reaction, user):
         for reaction in message.reactions:
             if str(reaction) == reactionStr:
                 numThumbsUp = numThumbsUp + 1
+        print(numThumbsUp)
         if numThumbsUp >= numVotes:
             toBeBinned = message.mentions[0]
             binned = await binUnbin(guild, toBeBinned)
+            print('got past role assign')
             binMessages.remove(message.id)
             if binned == True:
                 await message.channel.send(f'{toBeBinned.mention} has been unbinned!')
