@@ -4,7 +4,9 @@ from confidential import *
 
 client = commands.Bot(command_prefix='!')
 
-reactionStr = '👍'
+thumbsUp = '👍'
+
+thumbsDown = '👎'
 
 binMessages = []
 
@@ -24,7 +26,7 @@ async def on_reaction_add(reaction, user):
     message = reaction.message
     guild = message.guild
     if message.id in binMessages:
-        if reaction.count >= numVotes:
+        if reaction.count >= numVotes and str(reaction.emoji) == thumbsUp:
             print('time to assign the binned role')
             toBeBinned = message.mentions[0]
             binned = await binUnbin(guild, toBeBinned)
@@ -36,6 +38,9 @@ async def on_reaction_add(reaction, user):
                 await message.channel.send(f'{toBeBinned.mention} has been binned!')
                 if len(message.mentions) == 1:
                     await message.channel.send('https://giphy.com/gifs/LJemLPJs6dBhm')
+        if reaction.count >= numVotes and str(reaction.emoji) == thumbsDown:
+            await message.delete()
+            binMessages.remove(message.id)
 
 @client.command()
 async def bin(ctx, member:discord.Member, *, reason:str = ''):
@@ -49,7 +54,7 @@ async def bin(ctx, member:discord.Member, *, reason:str = ''):
     if await isBinned(guild, member) == True:
         await ctx.send(f'{member.mention} is already in the bin!')
     else:
-        message = await ctx.send(f'{member.mention} is being voted into the bin by {ctx.message.author.mention}{reasonMessage}.\nReact with a {reactionStr} to vote for binning. {numVotes} {reactionStr}\'s are needed.')
+        message = await ctx.send(f'{member.mention} is being voted into the bin by {ctx.message.author.mention}{reasonMessage}.\nReact with a {thumbsUp} to vote for binning. {numVotes} {thumbsUp}\'s are needed.')
         binMessages.append(message.id)
 
 @client.command()
@@ -61,7 +66,7 @@ async def unbin(ctx, member:discord.Member, *, reason:str = ''):
     if await isBinned(guild, member) == False:
         await ctx.send(f'{member.mention} is already out of the bin!')
     else:
-        message = await ctx.send(f'{member.mention} is being voted out of the bin by {ctx.message.author.mention}{reasonMessage}. React with a {reactionStr} to vote for unbinning. {numVotes} {reactionStr}\'s are needed.')
+        message = await ctx.send(f'{member.mention} is being voted out of the bin by {ctx.message.author.mention}{reasonMessage}. React with a {thumbsUp} to vote for unbinning. {numVotes} {thumbsUp}\'s are needed.')
         binMessages.append(message.id)
 
 
