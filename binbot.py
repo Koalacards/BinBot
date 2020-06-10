@@ -84,8 +84,6 @@ async def unbin(ctx, member:discord.Member, *, reason:str = ''):
 
 @client.command()
 async def votenum(ctx, number:int):
-    if ctx.channel.name != bin_votes_channel:
-        return
     if ctx.message.author.display_name == 'Koalacards' or ctx.message.author.display_name == 'Lili':
         if number > 0:
             global numVotes
@@ -118,7 +116,7 @@ async def unbinAction(guild, member:discord.Member):
             hasBinnedRole = True
             break
     if hasBinnedRole == True:
-        await member.add_roles(binnedRole)
+        await member.remove_roles(binnedRole)
         return True
     else:
         return False
