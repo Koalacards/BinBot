@@ -46,9 +46,9 @@ async def on_reaction_add(reaction, user):
             unbinned = await unbinAction(guild, toBeUnBinned)
             unbinMessages.remove(message.id)
             if unbinned == True:
-                await message.channel.send(f'{toBeBinned.mention} has been unbinned!')
+                await message.channel.send(f'{toBeUnBinned.mention} has been unbinned!')
             else:
-                await message.channel.send(f'{toBeBinned.mention} was supposed to be unbinned, but they are already unbinned!')
+                await message.channel.send(f'{toBeUnBinned.mention} was supposed to be unbinned, but they are already unbinned!')
         if reaction.count >= numVotes and str(reaction.emoji) == thumbsDown:
             await message.delete()
             unbinMessages.remove(message.id)
