@@ -1,2 +1,2 @@
 # BinBot
-stupid bot i thought of for binning ppl
+On Discord, binning is a concept in which someone is put into "the bin", or binned, making them not allowed to talk in any discord channels except for the bin channel (#bin). Meanwhile, all of the non-binned members of the discord are not allowed to talk in the bin channel yet the two groups can still see each others' messages so it is a unique punishment that a lot of friend servers have enjoyed. This bot aims to streamline the binning process by being able to vote for bins and unbins, being able to change the voting number, and hopefully eventually being able to setup bin and binvotes channels and creating some sort of admin system so that it can be mainstreamed to other servers.
