@@ -2,7 +2,7 @@ thumbsUp = '👍'
 
 thumbsDown = '👎'
 
-command_prefix = '~'
+command_prefix = '!'
 
 numVotes = 5
 
