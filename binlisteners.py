@@ -32,6 +32,7 @@ class BinListeners(commands.Cog):
                     await message.channel.send(f'{toBeBinned.mention} has been binned!')
                     if len(message.mentions) == 1:
                         await message.channel.send('https://giphy.com/gifs/LJemLPJs6dBhm')
+                    await message.delete()
                 else:
                     await message.channel.send(f'{toBeBinned.mention} was supposed to be binned, but they are already binned!')
             if reaction.count >= globalvars.numVotes and str(reaction.emoji) == globalvars.thumbsDown:
@@ -44,6 +45,7 @@ class BinListeners(commands.Cog):
                 unbinned = await binutils.unbinAction(guild, toBeUnBinned)
                 if unbinned == True:
                     await message.channel.send(f'{toBeUnBinned.mention} has been unbinned!')
+                    await message.delete()
                 else:
                     await message.channel.send(f'{toBeUnBinned.mention} was supposed to be unbinned, but they are already unbinned!')
             if reaction.count >= globalvars.numVotes and str(reaction.emoji) == globalvars.thumbsDown:
