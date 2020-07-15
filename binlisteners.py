@@ -17,39 +17,88 @@ class BinListeners(commands.Cog):
   
 
     @commands.Cog.listener()
-    async def on_reaction_add(self, reaction, user):
-        message = reaction.message
+    async def on_raw_reaction_add(self, payload):
+        channel = await self.bot.fetch_channel(payload.channel_id)
+        message = await channel.fetch_message(payload.message_id)
         guild = message.guild
-
+        content = None
+        if len(message.embeds) == 1:
+            content = message.embeds[0].description
+        elif len(message.embeds) == 0:
+            content = message.content
+        else:
+            return
         
-        if message.author == self.bot.user and 'is being voted into the bin' in message.content:
-            if message.created_at < datetime.now() - timedelta(hours=12):
+        if message.author == self.bot.user and 'is being voted into the bin' in content:
+            if message.created_at < datetime.now() - timedelta(hours=globalvars.invalidated_hours):
                 await message.delete()
-            if reaction.count >= globalvars.numVotes and str(reaction.emoji) == globalvars.thumbsUp:
-                toBeBinned = message.mentions[0]
-                binned = await binutils.binAction(guild, toBeBinned)
-                if binned == True:
-                    await message.channel.send(f'{toBeBinned.mention} has been binned!')
-                    if len(message.mentions) == 1:
-                        await message.channel.send('https://giphy.com/gifs/LJemLPJs6dBhm')
+            for reaction in message.reactions:
+                if reaction.count >= globalvars.numVotes and str(reaction.emoji) == globalvars.thumbsUp:
+                    votedID = int(content.split()[0][3:][:-1])
+                    votedMember = guild.get_member(votedID)
+                    if votedMember is None:
+                        await message.channel.send(f'The user being voted in has either left the server or could not be found.')
+                        await message.delete()
+                    binned = await binutils.binAction(guild, votedMember)
+                    if binned == True:
+                        if len(message.embeds) == 0:
+                            await message.edit(content=f'{votedMember.mention} has been binned!')
+                        elif len(message.embeds) == 1:
+                            embed = discord.Embed(
+                                title='Vote Over',
+                                description=f'{votedMember.mention} has been binned!',
+                                colour=discord.Color.orange()
+                            )
+                            await message.edit(embed=embed)
+                    else:
+                        await message.edit(content=f'{votedMember.mention} was supposed to be binned, but they are already binned!', embed=None)
+                    break
+                if reaction.count >= globalvars.numVotes and str(reaction.emoji) == globalvars.thumbsDown:
                     await message.delete()
-                else:
-                    await message.channel.send(f'{toBeBinned.mention} was supposed to be binned, but they are already binned!')
-            if reaction.count >= globalvars.numVotes and str(reaction.emoji) == globalvars.thumbsDown:
+                    break
+        if message.author == self.bot.user and 'is being voted out of the bin' in content:
+            if message.created_at < datetime.now() - timedelta(hours=globalvars.invalidated_hours):
                 await message.delete()
-        if message.author == self.bot.user and 'is being voted out of the bin' in message.content:
-            if message.created_at < datetime.now() - timedelta(hours=12):
-                await message.delete()
-            if reaction.count >= globalvars.numVotes and str(reaction.emoji) == globalvars.thumbsUp:
-                toBeUnBinned = message.mentions[0]
-                unbinned = await binutils.unbinAction(guild, toBeUnBinned)
-                if unbinned == True:
-                    await message.channel.send(f'{toBeUnBinned.mention} has been unbinned!')
+            for reaction in message.reactions:
+                if reaction.count >= globalvars.numVotes and str(reaction.emoji) == globalvars.thumbsUp:
+                    votedID = int(content.split()[0][3:][:-1])
+                    votedMember = guild.get_member(votedID)
+                    if votedMember is None:
+                        await message.channel.send(f'The user being voted in has either left the server or could not be found.')
+                        await message.delete()
+                    unbinned = await binutils.unbinAction(guild, votedMember)
+                    if unbinned == True:
+                        if len(message.embeds) == 0:
+                            await message.edit(content=f'{votedMember.mention} has been unbinned!')
+                        elif len(message.embeds) == 1:
+                            embed = discord.Embed(
+                                title='Vote Over',
+                                description=f'{votedMember.mention} has been unbinned!',
+                                colour=discord.Color.orange()
+                            )
+                            await message.edit(embed=embed)
+                    else:
+                        await message.edit(content=f'{votedMember.mention} was supposed to be unbinned, but they are already unbinned!', embed=None)
+                    break
+                if reaction.count >= globalvars.numVotes and str(reaction.emoji) == globalvars.thumbsDown:
                     await message.delete()
-                else:
-                    await message.channel.send(f'{toBeUnBinned.mention} was supposed to be unbinned, but they are already unbinned!')
-            if reaction.count >= globalvars.numVotes and str(reaction.emoji) == globalvars.thumbsDown:
-                await message.delete()
+                    break
+    
+
+    @commands.Cog.listener()
+    async def on_guild_channel_create(self, channel):
+        guild = channel.guild
+        binnedRole = None
+        for role in guild.roles:
+            if str(role) == 'binned':
+                binnedRole = role
+                break
+        
+        if binnedRole is not None and channel.name != 'bin':
+            await channel.set_permissions(binnedRole, send_messages=False)
+        
+
+
 
 def setup(bot):
     bot.add_cog(BinListeners(bot))

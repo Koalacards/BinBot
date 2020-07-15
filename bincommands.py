@@ -19,7 +19,13 @@ class BinCommands(commands.Cog):
         if await binutils.isBinned(guild, member) == True:
             await ctx.send(f'{member.mention} is already in the bin!')
         else:
-            message = await ctx.send(f'{member.mention} is being voted into the bin by {ctx.message.author.mention}{reasonMessage}.\nReact with a {globalvars.thumbsUp} to vote for binning. {globalvars.numVotes} {globalvars.thumbsUp}\'s are needed.')
+            embed = discord.Embed(
+                title="Bin Vote",
+                description=f'{member.mention} is being voted into the bin by {ctx.message.author.display_name}{reasonMessage}.\nReact with a {globalvars.thumbsUp} to vote for binning. {globalvars.numVotes} {globalvars.thumbsUp}\'s are needed.',
+                colour=discord.Color.red()
+            )
+            embed.set_footer(text=f'This vote will be invalidated in {globalvars.invalidated_hours} hours!')
+            message = await ctx.send(embed=embed)
             await message.add_reaction(globalvars.thumbsUp)
     
     @commands.command()
@@ -31,7 +37,13 @@ class BinCommands(commands.Cog):
         if await binutils.isBinned(guild, member) == False:
             await ctx.send(f'{member.mention} is already out of the bin!')
         else:
-            message = await ctx.send(f'{member.mention} is being voted out of the bin by {ctx.message.author.mention}{reasonMessage}. React with a {globalvars.thumbsUp} to vote for unbinning. {globalvars.numVotes} {globalvars.thumbsUp}\'s are needed.')
+            embed = discord.Embed(
+                title="Unbin Vote",
+                description=f'{member.mention} is being voted out of the bin by {ctx.message.author.display_name}{reasonMessage}.\nReact with a {globalvars.thumbsUp} to vote for unbinning. {globalvars.numVotes} {globalvars.thumbsUp}\'s are needed.',
+                colour=discord.Color.green()
+            )
+            embed.set_footer(text=f'This vote will be invalidated in {globalvars.invalidated_hours} hours!')
+            message = await ctx.send(embed=embed)
             await message.add_reaction(globalvars.thumbsUp)
 
     @commands.command()
@@ -43,6 +55,16 @@ class BinCommands(commands.Cog):
                 await ctx.send(':thumbsup:')
             else:
                 await ctx.send('The vote number must be a positive integer!')
+    
+    @commands.command()
+    async def invalidhours(self, ctx, hours:int):
+        author = ctx.message.author
+        if author.display_name == 'Koalacards' or author.guild_permissions.administrator == True:
+            if hours > 0:
+                globalvars.invalidated_hours = hours
+                await ctx.send(':thumbsup:')
+            else:
+                await ctx.send('The number of hours must be a positive integer!')
 
     @commands.command()
     async def start(self, ctx):
