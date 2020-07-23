@@ -4,7 +4,9 @@ thumbsDown = '👎'
 
 command_prefix = '!'
 
-numVotes = 5
+defaultThumbsUpCount = 5
+
+defaultThumbsDownCount = 5
 
 bin_channel = 'bin'
 

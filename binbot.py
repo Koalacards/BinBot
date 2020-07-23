@@ -2,10 +2,20 @@ import discord
 from discord.ext import commands
 from confidential import *
 import globalvars
+import bindbfunctions
 
-client = commands.Bot(command_prefix=globalvars.command_prefix)
+def _guild_prefix(bot, message):
+    guild = message.guild
+    if guild is None:
+        return globalvars.command_prefix
+    else:
+        return bindbfunctions.getCommandPrefix(guild.id)
 
+client = commands.Bot(command_prefix=_guild_prefix)
+
+client.load_extension('startcommand')
 client.load_extension('bincommands')
+client.load_extension('settingscommands')
 client.load_extension('binlisteners')
 
 @client.command()

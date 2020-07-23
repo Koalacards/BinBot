@@ -3,6 +3,7 @@ from discord.ext import commands
 import globalvars
 import binutils
 from datetime import datetime, timedelta
+import bindbfunctions
 
 class BinListeners(commands.Cog):
     def __init__(self, bot):
@@ -30,10 +31,10 @@ class BinListeners(commands.Cog):
             return
         
         if message.author == self.bot.user and 'is being voted into the bin' in content:
-            if message.created_at < datetime.now() - timedelta(hours=globalvars.invalidated_hours):
+            if message.created_at < datetime.now() - timedelta(hours=bindbfunctions.getHourCooldown(guild.id)):
                 await message.delete()
             for reaction in message.reactions:
-                if reaction.count >= globalvars.numVotes and str(reaction.emoji) == globalvars.thumbsUp:
+                if reaction.count >= bindbfunctions.getThumbsUpVoteNum(guild.id) and str(reaction.emoji) == bindbfunctions.getThumbsUpEmoji(guild.id):
                     votedID = int(content.split()[0][3:][:-1])
                     votedMember = guild.get_member(votedID)
                     if votedMember is None:
@@ -53,14 +54,14 @@ class BinListeners(commands.Cog):
                     else:
                         await message.edit(content=f'{votedMember.mention} was supposed to be binned, but they are already binned!', embed=None)
                     break
-                if reaction.count >= globalvars.numVotes and str(reaction.emoji) == globalvars.thumbsDown:
+                if reaction.count >= bindbfunctions.getThumbsDownVoteNum(guild.id) and str(reaction.emoji) == bindbfunctions.getThumbsDownEmoji(guild.id):
                     await message.delete()
                     break
         if message.author == self.bot.user and 'is being voted out of the bin' in content:
-            if message.created_at < datetime.now() - timedelta(hours=globalvars.invalidated_hours):
+            if message.created_at < datetime.now() - timedelta(hours=bindbfunctions.getHourCooldown(guild.id)):
                 await message.delete()
             for reaction in message.reactions:
-                if reaction.count >= globalvars.numVotes and str(reaction.emoji) == globalvars.thumbsUp:
+                if reaction.count >= bindbfunctions.getThumbsUpVoteNum(guild.id) and str(reaction.emoji) == bindbfunctions.getThumbsUpEmoji(guild.id):
                     votedID = int(content.split()[0][3:][:-1])
                     votedMember = guild.get_member(votedID)
                     if votedMember is None:
@@ -80,7 +81,7 @@ class BinListeners(commands.Cog):
                     else:
                         await message.edit(content=f'{votedMember.mention} was supposed to be unbinned, but they are already unbinned!', embed=None)
                     break
-                if reaction.count >= globalvars.numVotes and str(reaction.emoji) == globalvars.thumbsDown:
+                if reaction.count >= bindbfunctions.getThumbsDownVoteNum(guild.id) and str(reaction.emoji) == bindbfunctions.getThumbsDownEmoji(guild.id):
                     await message.delete()
                     break
     
