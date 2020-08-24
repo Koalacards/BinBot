@@ -48,6 +48,8 @@ class StartCommand(commands.Cog):
         for channel in guild.channels:
             if channel.name != 'bin':
                 await channel.set_permissions(binnedRole, send_messages=False)
+        
+        await binChannel.set_permissions(binnedRole, send_messages=True)
 
 def setup(bot):
     bot.add_cog(StartCommand(bot))

@@ -4,6 +4,7 @@ import globalvars
 import binutils
 from datetime import datetime, timedelta
 import bindbfunctions
+import re
 
 class BinListeners(commands.Cog):
     def __init__(self, bot):
@@ -29,13 +30,14 @@ class BinListeners(commands.Cog):
             content = message.content
         else:
             return
+
         
         if message.author == self.bot.user and 'is being voted into the bin' in content:
             if message.created_at < datetime.now() - timedelta(hours=bindbfunctions.getHourCooldown(guild.id)):
                 await message.delete()
             for reaction in message.reactions:
                 if reaction.count >= bindbfunctions.getThumbsUpVoteNum(guild.id) and str(reaction.emoji) == bindbfunctions.getThumbsUpEmoji(guild.id):
-                    votedID = int(content.split()[0][3:][:-1])
+                    votedID = self._getIDFromMessage(content)
                     votedMember = guild.get_member(votedID)
                     if votedMember is None:
                         await message.channel.send(f'The user being voted in has either left the server or could not be found.')
@@ -62,10 +64,10 @@ class BinListeners(commands.Cog):
                 await message.delete()
             for reaction in message.reactions:
                 if reaction.count >= bindbfunctions.getThumbsUpVoteNum(guild.id) and str(reaction.emoji) == bindbfunctions.getThumbsUpEmoji(guild.id):
-                    votedID = int(content.split()[0][3:][:-1])
+                    votedID = self._getIDFromMessage(content)
                     votedMember = guild.get_member(votedID)
                     if votedMember is None:
-                        await message.channel.send(f'The user being voted in has either left the server or could not be found.')
+                        await message.channel.send(f'The user being voted out has either left the server or could not be found.')
                         await message.delete()
                     unbinned = await binutils.unbinAction(guild, votedMember)
                     if unbinned == True:
@@ -97,6 +99,13 @@ class BinListeners(commands.Cog):
         
         if binnedRole is not None and channel.name != 'bin':
             await channel.set_permissions(binnedRole, send_messages=False)
+            
+    
+    def _getIDFromMessage(self, content:str):
+        firstStep = content.split()[0]
+        pattern = re.compile(r'[<@!>]')
+        secondStep = pattern.sub('', firstStep)
+        return int(secondStep)
         
 
 

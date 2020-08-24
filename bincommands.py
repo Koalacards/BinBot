@@ -13,6 +13,8 @@ class BinCommands(commands.Cog):
         if ctx.channel.name != globalvars.bin_votes_channel:
             return
         guild = ctx.message.guild
+        if await binutils.isBinned(guild, ctx.message.author):
+            return
         if member == self.bot.user:
             await ctx.send(f'Silly {ctx.message.author.display_name}, you can\'t bin me!')
             return
@@ -50,6 +52,8 @@ class BinCommands(commands.Cog):
     @commands.command()
     async def unbin(self, ctx, member:discord.Member, *, reason:str = ''):
         if ctx.channel.name != globalvars.bin_votes_channel:
+            return
+        if await binutils.isBinned(ctx.guild, ctx.message.author):
             return
         guild = ctx.message.guild
         reasonMessage = f' for reason: `{reason}`' if reason != '' else ''
