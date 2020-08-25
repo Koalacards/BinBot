@@ -53,6 +53,8 @@ class BinListeners(commands.Cog):
                                 colour=discord.Color.orange()
                             )
                             await message.edit(embed=embed)
+                    elif binned is None:
+                        await message.edit(content=f'{votedMember.mention} was supposed to be binned, but the binned role does not exist. Use the start command to re-add the binned role!', embed=None)
                     else:
                         await message.edit(content=f'{votedMember.mention} was supposed to be binned, but they are already binned!', embed=None)
                     break
@@ -80,6 +82,8 @@ class BinListeners(commands.Cog):
                                 colour=discord.Color.orange()
                             )
                             await message.edit(embed=embed)
+                    elif unbinned is None:
+                        await message.edit(content=f'{votedMember.mention} was supposed to be unbinned, but the binned role does not exist. Use the start command to re-add the binned role!', embed=None)
                     else:
                         await message.edit(content=f'{votedMember.mention} was supposed to be unbinned, but they are already unbinned!', embed=None)
                     break
