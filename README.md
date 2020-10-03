@@ -1,2 +1,16 @@
-# BinBot
-On Discord, binning is a concept in which someone is put into "the bin", or binned, making them not allowed to talk in any discord channels except for the bin channel (#bin). Meanwhile, all of the non-binned members of the discord are not allowed to talk in the bin channel yet the two groups can still see each others' messages so it is a unique punishment that a lot of friend servers have enjoyed. This bot aims to streamline the binning process by being able to vote for bins and unbins, being able to change the voting number, and hopefully eventually being able to setup bin and binvotes channels and creating some sort of admin system so that it can be mainstreamed to other servers.
+Have you ever wanted a punishment system in your server to keep all your pesky members in check? Introducing BinBot, a bot that automates the fun punishment system called binning!
+
+What is Binning? Binning a user involves giving them a role that only allows them to type in one channel, #bin, while seeing all of the other channels in the server.
+
+At the same time, the users that are not "binned" are not allowed to talk in #bin, making #bin a discord prison of sorts, where only binned members can talk to each other.
+
+What does BinBot do? BinBot automates the process of binning, first by creating the binned role and two channels, #bin and #bin-votes upon '!start'.
+
+After that, users can use '!bin' and '!unbin' to create votes to bin or unbin a user. If there are enough votes in favor or against the decision, the user will be binned/unbinned or the vote will be removed.
+
+The votes can also be customized to your liking! There are a number of options that server leaders can change, all of which can be found in '!help'.
+
+Happy Binning, everyone!
+
+
+top.gg link: https://top.gg/bot/713116939500650538
