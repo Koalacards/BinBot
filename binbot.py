@@ -12,11 +12,13 @@ def _guild_prefix(bot, message):
         return bindbfunctions.getCommandPrefix(guild.id)
 
 client = commands.Bot(command_prefix=_guild_prefix)
+client.remove_command('help')
 
 client.load_extension('startcommand')
 client.load_extension('bincommands')
 client.load_extension('settingscommands')
 client.load_extension('binlisteners')
+client.load_extension('helpcommand')
 
 @client.event
 async def on_ready():

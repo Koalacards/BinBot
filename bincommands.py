@@ -4,11 +4,11 @@ import globalvars
 import binutils
 import bindbfunctions
 
-class BinCommands(commands.Cog):
+class BinCommands(commands.Cog, name="Bin Voting Commands"):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(brief='To call a bin vote', help="This command will bring up a vote to bin the given discord member (if applicable).\n An embed will be created, and your thumbs-up and thumbs-down emotes of choice will be reacted.\n When the number of votes (either for-binning or against-binning) is reached, the embed will change into a 'vote over' embed, and the votes will not count.\nThe embed will also delete itself if a reaction is given after a set-number of hours have passed.")
     async def bin(self, ctx, member:discord.Member, *, reason:str = ''):
         if ctx.channel.name != globalvars.bin_votes_channel:
             return
@@ -49,7 +49,7 @@ class BinCommands(commands.Cog):
                 )
                 await ctx.send(embed=embed) 
     
-    @commands.command()
+    @commands.command(brief='To call an unbin vote', help="This command will bring up a vote to unbin the given discord member (if applicable).\n An embed will be created, and your thumbs-up and thumbs-down emotes of choice will be reacted.\n When the number of votes (either for-unbinning or against-unbinning) is reached, the embed will change into a 'vote over' embed, and the votes will not count.\nThe embed will also delete itself if a reaction is given after a set-number of hours have passed.")
     async def unbin(self, ctx, member:discord.Member, *, reason:str = ''):
         if ctx.channel.name != globalvars.bin_votes_channel:
             return
