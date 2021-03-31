@@ -11,6 +11,12 @@ class BinCommands(commands.Cog, name="Bin Voting Commands"):
     @commands.command(brief='To call a bin vote', help="This command will bring up a vote to bin the given discord member (if applicable).\n An embed will be created, and your thumbs-up and thumbs-down emotes of choice will be reacted.\n When the number of votes (either for-binning or against-binning) is reached, the embed will change into a 'vote over' embed, and the votes will not count.\nThe embed will also delete itself if a reaction is given after a set-number of hours have passed.")
     async def bin(self, ctx, member:discord.Member, *, reason:str = ''):
         if ctx.channel.name != globalvars.bin_votes_channel:
+            wrong_channel_embed = discord.Embed(
+                title="Wrong channel",
+                description="The `bin` command may only be used in a channel with name `#binvotes`",
+                colour=discord.Color.red()
+            )
+            await ctx.send(embed=wrong_channel_embed)
             return
         guild = ctx.message.guild
         if await binutils.isBinned(guild, ctx.message.author):
@@ -52,6 +58,12 @@ class BinCommands(commands.Cog, name="Bin Voting Commands"):
     @commands.command(brief='To call an unbin vote', help="This command will bring up a vote to unbin the given discord member (if applicable).\n An embed will be created, and your thumbs-up and thumbs-down emotes of choice will be reacted.\n When the number of votes (either for-unbinning or against-unbinning) is reached, the embed will change into a 'vote over' embed, and the votes will not count.\nThe embed will also delete itself if a reaction is given after a set-number of hours have passed.")
     async def unbin(self, ctx, member:discord.Member, *, reason:str = ''):
         if ctx.channel.name != globalvars.bin_votes_channel:
+            wrong_channel_embed = discord.Embed(
+                title="Wrong channel",
+                description="The `unbin` command may only be used in a channel with name `#binvotes`",
+                colour=discord.Color.red()
+            )
+            await ctx.send(embed=wrong_channel_embed)
             return
         if await binutils.isBinned(ctx.guild, ctx.message.author):
             return
